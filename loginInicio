@@ -1,0 +1,48 @@
+<?php
+include('modelo/conexion_bd.php');
+
+if(isset($_POST['correo']) && isset($_POST['contrasena'])) {
+    $CORREO = $_POST['correo'];
+    $PASSWORD = $_POST['contrasena'];
+
+    // Escapar las variables para evitar inyección SQL
+    $CORREO = mysqli_real_escape_string($conexion, $CORREO);
+    $PASSWORD = mysqli_real_escape_string($conexion, $PASSWORD);
+
+    $consulta = "SELECT * FROM usuario WHERE correo = '$CORREO' AND password = '$PASSWORD'";
+    $resultado = mysqli_query($conexion, $consulta);
+
+    // Verificar si se encontraron filas en el resultado
+    $filas = mysqli_num_rows($resultado);
+
+    if ($filas) {
+        // Obtener la información del usuario
+        $usuario = mysqli_fetch_assoc($resultado);
+        // Obtener la posición del usuario
+        $posicion = $usuario['posicion'];
+        
+        // Redirigir según la posición del usuario
+        if ($posicion === 'usuario') {
+            header("Location: inicio.php");
+            exit(); // Detener la ejecución del script después de redirigir
+        } elseif ($posicion === 'Gerente') {
+            header("Location: inicioGerente.php");
+            exit(); // Detener la ejecución del script después de redirigir
+        } else {
+            // En caso de otra posición, redirigir a algún lugar apropiado
+            header("Location: otroLugar.php");
+            exit(); // Detener la ejecución del script después de redirigir
+        }
+    } else {
+        include("menu.php");
+        ?>
+        <h1>ERROR DE INICIO</h1>
+        <?php
+    }
+
+    mysqli_free_result($resultado);
+    mysqli_close($conexion);
+} else {
+    echo "Error: Datos del formulario no recibidos.";
+}
+?>
