@@ -1,0 +1,16 @@
+<?php
+
+$host = "localhost";
+$usuario = "root"; 
+$contrasena = "";
+$base_datos = "proyecadg"; 
+$puerto = "3306";
+
+$conexion = new mysqli($host, $usuario, $contrasena, $base_datos, $puerto);
+
+
+
+
+
+$conexion->set_charset("utf8");
+?>
